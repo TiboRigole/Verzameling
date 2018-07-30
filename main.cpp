@@ -42,7 +42,7 @@ public:
     //destructor
     ~Verzameling(){
         //cout <<"destructor opgeroepen"<<endl;
-        delete rij;
+        delete [] rij;
     }
 
     void add(int getal){
