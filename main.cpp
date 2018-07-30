@@ -3,46 +3,49 @@ using namespace std;
 
 class Verzameling{
 private:
+    int aantalIngevuld;
     int grootte;
     int *rij;
-    int aantalIngevuld;
-
 public:
-
-    //gewone constructor
     Verzameling(){
         grootte = 10;
-        aantalIngevuld = 0;
         rij = new int[10];
+        aantalIngevuld = 0;
+        for(int i=0; i<10 ; i++){
+            rij[i]=0;
+        }
     }
 
-    //constructor met grootte parameter
     Verzameling(int gr){
         grootte = gr;
-        aantalIngevuld = 0;
-        rij = new int[gr];
+        rij = new int [gr];
+        aantalIngevuld =0;
+
+        for(int i=0 ; i<gr; i++) {
+            rij[i] = 0;
+        }
     }
 
-    bool bevatGetal(int getal){
-        //returnt 0 als het getal niet in de array zit
-        //returnt 1 als het getal in de rij zit
-        bool aanwezig = false;
+    //copyconstructor
+    Verzameling(const Verzameling& v){
+        grootte = v.grootte;
+        aantalIngevuld = v.aantalIngevuld;
 
-        for(int i=0 ; i<aantalIngevuld; i++){
-            if (rij[i] == getal){aanwezig = true;}
+        rij = new int[grootte];
+
+        for(int i=0; i<aantalIngevuld ; i++){
+            rij[i] = v.rij[i];
         }
 
-        return aanwezig;
+        for(int i=aantalIngevuld; i< grootte ; i++){
+            rij[i] = 0;
+        }
     }
 
-    int pakGetalOpPlek(int i){
-        return rij[i];
-    }
-
-    //destructor
     ~Verzameling(){
-        //cout <<"destructor opgeroepen"<<endl;
-        delete [] rij;
+        delete []rij;
+        grootte =0;
+        aantalIngevuld=0;
     }
 
     void add(int getal){
@@ -63,6 +66,46 @@ public:
         }
     }
 
+    int pakGetalOpPlek(int i) {
+        return rij[i];
+    }
+
+    bool bevatGetal(int getal){
+        //returnt 0 als het getal niet in de array zit
+        //returnt 1 als het getal in de rij zit
+        bool aanwezig = false;
+
+        for(int i=0 ; i<aantalIngevuld; i++){
+            if (rij[i] == getal){aanwezig = true;}
+        }
+
+        return aanwezig;
+    }
+
+    //operator=, via referentie teruggegeven ipv via waarde
+    Verzameling& operator= (const Verzameling& v){
+        if(this!= &v){
+            delete [] rij;
+            grootte =v.grootte;
+            rij =new int[grootte];
+            aantalIngevuld = v.aantalIngevuld;
+
+            for(int i=0; i<aantalIngevuld ; i++){
+                rij[i] = v.rij[i];
+            }
+
+            for(int i=aantalIngevuld; i< grootte ; i++){
+                rij[i] = 0;
+            }
+
+        }
+        return *this;
+    }
+
+
+
+
+
     //output operator
     friend ostream& operator<< (ostream& os, Verzameling v);    //buiten de klasse verder afgewerkt
 
@@ -76,6 +119,7 @@ public:
     friend Verzameling operator+(Verzameling a, int getal);
 
     friend Verzameling operator+(int getal, Verzameling a);
+
 };
 
 ostream& operator<< (ostream& os, Verzameling v){
@@ -85,8 +129,6 @@ ostream& operator<< (ostream& os, Verzameling v){
         if(i != v.aantalIngevuld-1){cout <<",";}
     }
     cout<<"}"<<endl;
-
-    //return dit allemaal?
 }
 
 Verzameling operator*(Verzameling a, Verzameling b){
@@ -161,6 +203,11 @@ Verzameling operator+(int getal, Verzameling a){
 
 
 
+
+
+
+
+
 int main()
 {
     Verzameling v1; //default 10 plaatsen
@@ -172,7 +219,7 @@ int main()
     v4 = v1 + v2; //unie
     v5 = v1 * v2; //doorsnede
     cout << v4 << endl; //getallen gescheiden door ,
-                        //en omringd door {}
+    //en omringd door {}
     cout << v5 << endl;
 
     v4 = v4 + 84; //casting
