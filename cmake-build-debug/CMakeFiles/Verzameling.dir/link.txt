@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2018.1.5\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\Verzameling.dir/objects.a
+C:\MinGW\bin\ar.exe cr CMakeFiles\Verzameling.dir/objects.a @CMakeFiles\Verzameling.dir\objects1.rsp
+C:\MinGW\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\Verzameling.dir/objects.a -Wl,--no-whole-archive  -o Verzameling.exe -Wl,--out-implib,libVerzameling.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Verzameling.dir\linklibs.rsp

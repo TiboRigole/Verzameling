@@ -1,0 +1,219 @@
+#include <iostream>
+using namespace std;
+
+class Verzameling{
+private:
+    int grootte;
+    int *rij;
+    int aantalIngevuld;
+
+public:
+
+    //gewone constructor
+    Verzameling(){
+        grootte = 10;
+        aantalIngevuld = 0;
+        rij = new int[10];
+    }
+
+    //constructor met grootte parameter
+    Verzameling(int gr){
+        grootte = gr;
+        aantalIngevuld = 0;
+        rij = new int[gr];
+    }
+
+    //Verzameling
+
+    //destructor
+    ~Verzameling(){
+        cout <<"destructor opgeroepen"<<endl;
+        delete rij;
+    }
+
+    void add(int getal){
+        //als aantalIngevuld < grootte-1 , dan is de rij al ingevuld, moeten we het 1tje vergroten
+        if(aantalIngevuld >= grootte-1){
+            //nog totaal niet zeker als dit juist is, zowieso nog aangepast
+            cout<<"de rij is te klein, het elem past er niet meer in"<<endl;
+            delete rij;
+            //doe nog zaken, zoals maak nieuwe rij aan, kopieer alle elementen,...
+        }
+        else{
+            //cout << "het element past der wel nog in"<<endl;
+            //dus als de rij niet te klein is
+            //misschien moet der hier nog sterretje ofzo
+            rij[aantalIngevuld] = getal;
+            aantalIngevuld ++;
+        }
+    }
+
+
+
+    //output operator
+    friend ostream& operator<< (ostream& os, Verzameling v);    //buiten de klasse verder afgewerkt
+
+    //+ operator overloading
+    //Verzameling operator+(Verzameling ander);
+
+    //friend Verzameling operator*(const Verzameling& v1, const Verzameling& v2);
+    friend Verzameling operator* (const Verzameling v1,const Verzameling v2);
+    Verzameling operator=(Verzameling ander);
+
+
+};
+
+ostream& operator<< (ostream& os, Verzameling v){
+    cout <<"{";
+    for(int i=0; i<v.aantalIngevuld ; i++){
+        cout<< v.rij[i];
+        if(i != v.aantalIngevuld-1){cout <<",";}
+    }
+    cout<<"}"<<endl;
+
+    //return dit allemaal?
+}
+
+
+//membermethode operator+ verder definieren
+/*Verzameling Verzameling::operator+(Verzameling ander) {
+    cout <<"operator + opgeroepen "<<endl;
+    //unie maken van de 2
+    //dus gehele verzameling a, gehele verzameling b, maar de duplicaties mogen niet 2x voorkomen
+
+    return Verzameling();
+}*/
+
+/*Verzameling Verzameling::operator*(Verzameling ander) {
+    cout <<"operator* opgeroepen" << endl;
+    //doorsnede, dus enkel de duplicate elementen
+
+    Verzameling vreturn;
+
+    int aantalGemeenschappelijke=0;
+
+    //tellen hoeveel elementen er gemeenschappelijk zijn
+    for(int i=0; i<aantalIngevuld; i++){
+        int* getal = rij[i];
+        cout<<"getal ="<<getal<<endl;
+        for(int j=0; j<ander.aantalIngevuld ; j++){
+            if(getal == ander.rij[j]){aantalGemeenschappelijke++;}
+        }
+    }
+
+    //nu hebben we het aantal gemeenschappelijke
+            cout<< "aantalGemeenschappelijke " <<aantalGemeenschappelijke<<endl;
+    vreturn.grootte= aantalGemeenschappelijke;
+    vreturn.aantalIngevuld= aantalGemeenschappelijke;
+
+    //de elementen toevoegen
+    for(int i=0; i<aantalIngevuld; i++){
+        int getal = rij[i];
+
+        for(int j=0; j<ander.aantalIngevuld ; j++){
+            if(getal == ander.rij[j]){vreturn.add(getal);}
+        }
+    }
+
+
+    return vreturn;
+
+
+
+
+}*/
+
+/*Verzameling operator*(const Verzameling& v1, const Verzameling& v2){
+    Verzameling res;
+    for (int i=0; i<v1.aantal; i++)
+        if(v2.isElement(v1.getallen[i])) res.add(v1.getallen[i]);
+    return res;
+}*/
+/*Verzameling operator*(const Verzameling v1, const Verzameling v2){
+    cout<<"operator* op geroepen "<<endl;
+    Verzameling vres;
+
+    int aantalGemeenschappelijke =0;
+    for(int i=0; i<v1.aantalIngevuld; i++){
+
+        int &getal = v1.rij[i];
+        cout<<"getal = "<<&getal<<endl;
+        cout<<"getalwaarde =" <<getal <<endl;
+
+        for(int j=0; j<v2.aantalIngevuld ; j++){
+            if(getal == v2.rij[j]){
+                vres.add(getal);
+            }
+        }
+    }
+
+    return vres;
+}
+ */
+
+
+Verzameling Verzameling::operator=(Verzameling ander) {
+    cout <<"operator= opgeroepen"<<endl;
+
+    Verzameling vres;
+    vres.aantalIngevuld = ander.aantalIngevuld;
+    vres.grootte = ander.grootte;
+    vres.rij = new int[grootte];
+
+    for(int i=0; i<aantalIngevuld ; i++){
+        vres.rij[i] = ander.rij[i];
+    }
+}
+
+
+
+
+
+int main()
+{
+
+    Verzameling v1; //default 10 plaatsen
+    Verzameling v2(20); //parameter -> aantal plaatsen
+
+    for (int i=1;i<10;i++) v1.add(i);
+    cout <<"v1: "<<endl;
+
+    cout <<v1<<endl; //moet nog weg, was om te checken alst paste
+
+    for (int i=1;i<10;i++) v2.add(2*i);
+    cout <<"v2: "<<endl;
+    cout <<v2<<endl; //moet nog weg, was om te chekcen alst paste
+
+    Verzameling v3 = v2;
+    cout <<"v3"<<endl;
+    cout <<v3<<endl;
+
+    Verzameling v4,v5;
+
+    /*
+    v4 = v1 + v2; //unie
+    */
+    //die operator = heeft misschien nog nodig, want deze kan fout oproepen
+    //v5 = v1 * v2; //doorsnede
+
+    //cout<<"v5: "<<endl;
+    //cout <<v5<<endl;
+            /*
+    cout << v4 << endl; //getallen gescheiden door ,
+                        //en omringd door {}
+    cout << v5 << endl;
+    v4 = v4 + 84; //casting
+    v5 = 20 + v1;
+
+    cout << v4 << endl;
+    cout << v5 << endl;
+
+
+    v1.print();
+    v2.print();
+    v3.print();
+    v4.print();
+    v5.print();
+    */
+    return 0;
+}
